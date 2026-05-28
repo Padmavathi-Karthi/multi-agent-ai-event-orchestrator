@@ -1,0 +1,39 @@
+# config.yml
+# Configuration for the conversational agent runtime.
+#
+# Architecture:
+# - CompactLLMCommandGenerator handles natural language interpretation
+#   and flow selection using an LLM.
+# - FlowPolicy executes deterministic conversational workflows.
+#
+# This separation allows the system to combine:
+# - flexible language understanding
+# - auditable and controlled business logic
+#
+# The conversational layer is designed for structured,
+# high-reliability interactions where workflow execution
+# must remain deterministic.
+
+recipe: default.v1
+language: en
+
+assistant_id: event_booking_agent
+
+pipeline:
+  - name: CompactLLMCommandGenerator
+
+    llm:
+      model_group: nebius_llm
+
+    flow_retrieval:
+      embeddings:
+        model_group: nebius_embeddings
+
+    # Increased limit to support long-form
+    # conversational and voice-transcribed inputs.
+    user_input:
+      max_characters: 2000
+
+policies:
+  - name: FlowPolicy
+

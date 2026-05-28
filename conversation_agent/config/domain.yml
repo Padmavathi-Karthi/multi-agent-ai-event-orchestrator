@@ -1,0 +1,76 @@
+# domain.yml
+# Domain configuration for the conversational booking agent.
+#
+# The system combines:
+# - LLM-based slot extraction for flexible natural language understanding
+# - deterministic workflow execution for controlled business operations
+#
+# Slot ownership is intentionally separated:
+#
+# - from_llm:
+#     Values inferred from conversational input using the language model.
+#
+# - controlled:
+#     Values managed exclusively by system policies and guardrails.
+#
+# This architecture ensures conversational flexibility while preserving
+# deterministic business validation and operational safety.
+
+version: "3.1"
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: false
+
+slots:
+
+  guest_count:
+    type: float
+    mappings:
+      - type: from_llm
+
+  vegan_count:
+    type: float
+    mappings:
+      - type: from_llm
+
+  deposit_amount_gbp:
+    type: float
+    mappings:
+      - type: from_llm
+
+  # Controlled exclusively by the policy engine.
+  booking_valid:
+    type: bool
+    mappings:
+      - type: controlled
+
+  rejection_reason:
+    type: text
+    mappings:
+      - type: controlled
+
+responses:
+
+  utter_ask_guest_count:
+    - text: "How many guests are expected for the event?"
+
+  utter_ask_vegan_count:
+    - text: "How many guests require vegan meal options?"
+
+  utter_ask_deposit_amount_gbp:
+    - text: "What deposit amount is proposed for the booking?"
+
+  utter_out_of_scope:
+    - text: >
+        This assistant is configured specifically for booking
+        confirmation workflows.
+
+  utter_default:
+    - text: >
+        I could not determine the booking details.
+        Please provide the expected guest count.
+
+actions:
+  - action_booking_policy_validation
+
