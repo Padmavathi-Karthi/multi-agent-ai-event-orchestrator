@@ -1,0 +1,45 @@
+[project]
+name = "sovereign-agent-lab"
+version = "0.1.0"
+description = "Multi-agent AI system using LangGraph, MCP, and conversational workflows"
+requires-python = ">=3.12"
+
+dependencies = [
+    "openai>=1.30.0",
+    "python-dotenv>=1.0.0",
+    "requests>=2.31.0",
+
+    # Agent framework
+    "langgraph>=0.2.0",
+    "langchain-core>=0.2.0",
+    "langchain-openai>=0.1.0",
+
+    # MCP tool layer
+    "mcp[cli]>=1.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.9.0",
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["sovereign_agent"]
+
+[tool.pytest.ini_options]
+testpaths = ["sovereign_agent/tests"]
+addopts = ["-v", "--tb=short"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+exclude = [".venv", "__pycache__"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
